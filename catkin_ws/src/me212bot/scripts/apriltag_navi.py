@@ -59,7 +59,7 @@ def apriltag_callback(data):
     if len(data.detections)!=0:  # check if apriltag is detected
         detection = data.detections[0]
         print detection.pose 
-        if detection.id == 21:   # tag id is the correct one
+        if detection.id == 20:   # tag id is the correct one
         # Use the functions in helper.py to do the following 
         # step 1. convert the pose to poselist Hint: pose data => detection.pose.pose 
         # step 2. do the matrix manipulation 
