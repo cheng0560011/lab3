@@ -66,12 +66,12 @@ def apriltag_callback(data):
 # step 3. publish the base frame w.r.t the map frame
 # note: tf listener and broadcaster are initalize in line 19~20
 
-        poslist1 = pose2poselist(detection.pose)
-        transformPose(lr,poslist1,'/camra','/base')
-        poslist1 = invPoselist(poselist1)
-        transformPose(lr,poslist1,'/tag','map')
-        detection.pose = poselist2pose(poslist1)
-        velcmd.publish(detection.pose)
+        poslist1 = pose2poselist(detection.pose.pose)
+        poselist1_T2B = transformPose(lr,poslist1,'/camera','/base_link')
+        poslist1_T2B_inv = invPoselist(postlist1_T2B)
+        poselist1_B2M = transformPose(lr,poslist1_T2B_inv,'/tag','map')
+        detection.pose = poselist2pose(poslist1_B2M)
+        velcmd.publish(detection.pose.pose)
 
 
 
