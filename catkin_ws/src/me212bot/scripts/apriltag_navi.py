@@ -59,21 +59,19 @@ def apriltag_callback(data):
     if len(data.detections)!=0:  # check if apriltag is detected
         detection = data.detections[0]
         print detection.pose 
-        #if detection.id == 21:   # tag id is the correct one
-# Use the functions in helper.py to do the following 
-# step 1. convert the pose to poselist Hint: pose data => detection.pose.pose 
-# step 2. do the matrix manipulation 
-# step 3. publish the base frame w.r.t the map frame
-# note: tf listener and broadcaster are initalize in line 19~20
+        if detection.id == 21:   # tag id is the correct one
+        # Use the functions in helper.py to do the following 
+        # step 1. convert the pose to poselist Hint: pose data => detection.pose.pose 
+        # step 2. do the matrix manipulation 
+        # step 3. publish the base frame w.r.t the map frame
+        # note: tf listener and broadcaster are initalize in line 19~20
 
-        poslist1 = pose2poselist(detection.pose.pose)
-        poselist1_T2B = transformPose(lr,poslist1,'/camera','/base_link')
-        poslist1_T2B_inv = invPoselist(postlist1_T2B)
-        poselist1_B2M = transformPose(lr,poslist1_T2B_inv,'/tag','map')
-        detection.pose.pose = poselist2pose(poslist1_B2M)
-        velcmd.publish(detection.pose.pose)
-
-
+            poselist1 = pose2poselist(detection.pose.pose)
+            poselist1_T2B = transformPose(lr,poselist1,'/camera','/base_link')
+            poselist1_T2B_inv = invPoselist(poselist1_T2B)
+            poselist1_B2M = transformPose(lr,poselist1_T2B_inv,'/tag','map')
+            #detection.pose.pose = poselist2pose(poselist1_B2M)  #detection is form camera so no need to write back
+            pubFrame(br,poselist1_B2M)
 
 ## navigation control loop (No need to modify)
 def navi_loop():
