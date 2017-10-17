@@ -13,7 +13,7 @@ import tf.transformations as tfm
 
 from apriltags_ros.msg import AprilTagDetectionArray
 from helper import transformPose, pubFrame, cross2d, lookupTransform, pose2poselist, invPoselist, diffrad
-
+from me212bot.msg import WheelCmdVel
 
 rospy.init_node('apriltag_navi', anonymous=True)
 lr = tf.TransformListener()
@@ -37,28 +37,43 @@ def main():
 def constant_vel_loop():
     velcmd_pub = rospy.Publisher('/cmdvel', WheelCmdVel, queue_size=1)
     rate = rospy.Rate(100) # 100hz
-    
+ 
+   
     while not rospy.is_shutdown() :
+    # lab 3 Task2.2
+    # last modified at Oct15,2017
+    # create a WheelCmdVel msg
+        wcv = WheelCmdVel()
+        wcv.desiredWV_R = 0.1
+        wcv.desiredWV_L = 0.2
+        velcmd_pub.publish(wcv)   
         ##wcv = WheelCmdVel()
         ##wcv.desiredWV_R = ???
         ##wcv.desiredWV_L = ???
-        
         ##velcmd_pub.publish(???) 
-        
         rate.sleep() 
 
 ## apriltag msg handling function (Need to modify)
 def apriltag_callback(data):
-    # use apriltag pose detection to find where is the robot
+# use apriltag pose detection to find where is the robot
     if len(data.detections)!=0:  # check if apriltag is detected
-    	detection = data.detections[0]
-    	print detection.pose 
-    	if detection.id == 21:   # tag id is the correct one
-		# Use the functions in helper.py to do the following 
-		# step 1. convert the pose to poselist Hint: pose data => detection.pose.pose 
-		# step 2. do the matrix manipulation 
-		# step 3. publish the base frame w.r.t the map frame
-    		# note: tf listener and broadcaster are initalize in line 19~20
+        detection = data.detections[0]
+        print detection.pose 
+        #if detection.id == 21:   # tag id is the correct one
+# Use the functions in helper.py to do the following 
+# step 1. convert the pose to poselist Hint: pose data => detection.pose.pose 
+# step 2. do the matrix manipulation 
+# step 3. publish the base frame w.r.t the map frame
+# note: tf listener and broadcaster are initalize in line 19~20
+
+        poslist1 = pose2poselist(detection.pose)
+        transformPose(lr,poslist1,'/camra','/base')
+        poslist1 = invPoselist(poselist1)
+        transformPose(lr,poslist1,'/tag','map')
+        detection.pose = poselist2pose(poslist1)
+        velcmd.publish(detection.pose)
+
+
 
 ## navigation control loop (No need to modify)
 def navi_loop():

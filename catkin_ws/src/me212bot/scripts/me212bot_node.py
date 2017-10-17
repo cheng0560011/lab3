@@ -11,6 +11,7 @@ import tf.transformations as tfm
 from geometry_msgs.msg import Pose, Quaternion
 import math
 import helper
+from me212bot.msg import WheelCmdVel
 
 if DEMO==1:
     from Adafruit_MotorHAT import Adafruit_MotorHAT
@@ -30,6 +31,11 @@ def main():
     
     ## 1. Initialize a subscriber (subscribe ROS topic)
     ## cmdvel_sub = ???
+    
+    ## Task2 2.3 Subscribe the topic
+    ## last modified Oct15, 2017
+    cmdvel_sub = rospy.Subscriber('cmdvel',WheelCmdVel, cmdvel_callback)
+    
     
     rospy.spin()
 
