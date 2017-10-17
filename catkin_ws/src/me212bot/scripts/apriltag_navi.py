@@ -69,7 +69,7 @@ def apriltag_callback(data):
             poselist1 = pose2poselist(detection.pose.pose)
             poselist1_T2B = transformPose(lr,poselist1,'/camera','/base_link')
             poselist1_T2B_inv = invPoselist(poselist1_T2B)
-            poselist1_B2M = transformPose(lr,poselist1_T2B_inv,'/tag','map')
+            poselist1_B2M = transformPose(lr,poselist1_T2B_inv,'/apriltag','map')
             #detection.pose.pose = poselist2pose(poselist1_B2M)  #detection is form camera so no need to write back
             pubFrame(br,poselist1_B2M)
 
