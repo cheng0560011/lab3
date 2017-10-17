@@ -70,7 +70,7 @@ def apriltag_callback(data):
         poselist1_T2B = transformPose(lr,poslist1,'/camera','/base_link')
         poslist1_T2B_inv = invPoselist(postlist1_T2B)
         poselist1_B2M = transformPose(lr,poslist1_T2B_inv,'/tag','map')
-        detection.pose = poselist2pose(poslist1_B2M)
+        detection.pose.pose = poselist2pose(poslist1_B2M)
         velcmd.publish(detection.pose.pose)
 
 
